@@ -57,6 +57,22 @@ namespace Library.Tests
                 );
         }
 
+        [Fact]
+        public async Task FailedConversion()
+        {
+            var ex = await Assert.ThrowsAsync<InvalidCastException>(() => CheckOutput(new[] { "RuleId", "Priority", "OutputValue", "Filter1" },
+                new[] {
+                    new[] { "1", "1", AnyValue },
+                },
+                new[] {
+                    new Rule1Filters<string> { RuleId = 1, Priority = 1, OutputValue = 1, Filter1 = AnyValue },
+                    }
+                )
+            );
+
+            Assert.Equal("Failed to convert value(1, 3) to OutputValue", ex.Message);
+        }
+
         private static async Task CheckOutput<T>(string[] headers, IEnumerable<string[]> lines, IEnumerable<T> expectedItems, char separator = ',') where T : new()
         {
             var rows = lines.ToArray();

@@ -203,7 +203,7 @@ namespace Library
                     }
                     catch (Exception ex)
                     {
-                        throw new InvalidCastException($"Failed to convert ({index}, {j}) value", ex);
+                        throw new InvalidCastException($"Failed to convert value({index}, {j}) to {prop.Name}", ex);
                     }
                 }
 
