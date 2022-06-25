@@ -24,4 +24,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Library\Library.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="Storage\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Storage\" />
+  </ItemGroup>
 </Project>
