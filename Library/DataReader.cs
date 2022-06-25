@@ -24,8 +24,17 @@ namespace Library
                 throw new ArgumentNullException(nameof(list));
             }
 
-            using var reader = new StringReader(string.Join("\r\n", list));
-            return ReadImplAsync<T>(reader, options, cancellationToken);
+            static async IAsyncEnumerable<T> Impl(
+                IEnumerable<string> list,
+                DataReaderOptions? options,
+                [EnumeratorCancellation] CancellationToken cancellationToken)
+            {
+                using var reader = new StringReader(string.Join("\r\n", list));
+                await foreach (var line in ReadImplAsync<T>(reader, options, cancellationToken))
+                    yield return line;
+            }
+
+            return Impl(list, options, cancellationToken);
         }
 
         public static IAsyncEnumerable<T> ReadFromStreamAsync<T>(
@@ -37,9 +46,18 @@ namespace Library
             {
                 throw new ArgumentNullException(nameof(stream));
             }
-            
-            using var reader = new StreamReader(stream);
-            return ReadImplAsync<T>(reader, options, cancellationToken);
+
+            static async IAsyncEnumerable<T> Impl(
+                Stream stream,
+                DataReaderOptions? options,
+                [EnumeratorCancellation] CancellationToken cancellationToken)
+            {
+                using var reader = new StreamReader(stream);
+                await foreach (var line in ReadImplAsync<T>(reader, options, cancellationToken))
+                    yield return line;
+            }
+
+            return Impl(stream, options, cancellationToken);
         }
 
         public static IAsyncEnumerable<T> ReadFromTextAsync<T>(
@@ -52,8 +70,17 @@ namespace Library
                 throw new ArgumentNullException(nameof(csv));
             }
 
-            using var reader = new StringReader(csv);
-            return ReadImplAsync<T>(reader, options, cancellationToken);
+            static async IAsyncEnumerable<T> Impl(
+                string csv,
+                DataReaderOptions? options,
+                [EnumeratorCancellation] CancellationToken cancellationToken)
+            {
+                using var reader = new StringReader(csv);
+                await foreach (var line in ReadImplAsync<T>(reader, options, cancellationToken))
+                    yield return line;
+            }
+
+            return Impl(csv, options, cancellationToken);
         }
 
         private static char AutoDetectSeparator(ReadOnlySpan<char> sampleLine)
@@ -91,7 +118,8 @@ namespace Library
 
             foreach (var _ in line.Split(separator, StringSplitOptions.TrimEntries))
             {
-                headers[$"Column{pos + 1}"] = pos++;
+                var colName = $"Column{pos + 1}";
+                headers[colName] = pos++;
             }
            
             return headers;
@@ -107,7 +135,8 @@ namespace Library
                 var pos = 0;
 
                 foreach (var str in line.Split(separator, StringSplitOptions.TrimEntries)) {
-                    headers[str.ToString().ToLowerInvariant()] = pos++;
+                    var colName = str.ToString().Trim().ToLowerInvariant();
+                    headers[colName] = pos++;
                 }
 
             }
@@ -161,12 +190,15 @@ namespace Library
                 for (var j = 0; j < props.Length; j++)
                 {
                     var prop = props[j];
-                    var dataIx = headerLookup.TryGetValue(prop.Name.ToLowerInvariant(), out var colIx) ? colIx : j; 
-                    var propType = prop.PropertyType;
-                    var val = data[dataIx];
+                    if (!headerLookup.TryGetValue(prop.Name.ToLowerInvariant(), out var colIx))
+                    {
+                        continue;
+                    }
 
                     try
                     {
+                        var propType = prop.PropertyType;
+                        var val = data[colIx];
                         prop.SetValue(obj, ChangeType(val, propType));
                     }
                     catch (Exception ex)
