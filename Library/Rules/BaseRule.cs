@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library.Rules
 {
+    [Table("rules")]
     public abstract class BaseRule : IComparable<BaseRule>
     {
         public int RuleId { get; set; }

@@ -190,7 +190,7 @@ namespace Library
                 for (var j = 0; j < props.Length; j++)
                 {
                     var prop = props[j];
-                    if (!headerLookup.TryGetValue(prop.Name.ToLowerInvariant(), out var colIx))
+                    if (!headerLookup.TryGetValue(prop.Name.ToLowerInvariant(), out var colIx) || colIx > data.Length -1)
                     {
                         continue;
                     }

@@ -10,7 +10,7 @@ namespace Library.Storage
 
         T? FindByHashCode(int hash);
 
-        Task<T?> FindByHashCodeAsync(int hash);
+        Task<T?> FindByHashCodeAsync(int hash, CancellationToken cancellationToken);
     }
 }
 

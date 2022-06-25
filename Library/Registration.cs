@@ -12,6 +12,11 @@ namespace Library
     {
         public static IServiceCollection AddStrategy(this IServiceCollection services, params Type[] typeArgs)
         {
+            return AddStrategyWithStorage(services, typeof(MemStorage<>), typeArgs);
+        }
+
+        public static IServiceCollection AddStrategyWithStorage(this IServiceCollection services, Type storageImplType, params Type[] typeArgs)
+        {
             if (!typeArgs.AnySafe())
             {
                 return services;
@@ -52,9 +57,8 @@ namespace Library
             }
 
             Type storageType = typeof(IStorage<>).MakeGenericType(ruleType);
-            Type storageImplType = typeof(MemStorage<>).MakeGenericType(ruleType);
 
-            services.AddSingleton(storageType, storageImplType);
+            services.AddSingleton(storageType, storageImplType.MakeGenericType(ruleType));
             services.AddSingleton(strategyType, strategyImplType);
 
             return services;

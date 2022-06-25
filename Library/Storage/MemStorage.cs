@@ -29,7 +29,7 @@ namespace AdvancedFeatureFilter.Storage
 
         public T? FindByHashCode(int hash) => ctx.TryGetValue(hash, out var list) && list.Any() ? list[0] : default;
 
-        public Task<T?> FindByHashCodeAsync(int hash) => Task.Run(() => FindByHashCode(hash));
+        public Task<T?> FindByHashCodeAsync(int hash, CancellationToken cancellationToken) => Task.Run(() => FindByHashCode(hash), cancellationToken);
     }
 }
 

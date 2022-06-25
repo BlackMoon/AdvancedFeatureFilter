@@ -17,6 +17,7 @@ var config = new ConfigurationBuilder()
 using IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((hostContext, services) =>
     {
+        services.AddDistributedMemoryCache();
         services.AddOptions<AppConfig>().Bind(config);
         services.AddStrategy(typeof(string), typeof(string), typeof(string));
     })
@@ -29,7 +30,7 @@ var strategy = services.GetRequiredService<IStrategy3<string, string, string>>()
 try
 {
     //var csv = File.ReadAllText(appConfig.Value.CsvFile!);
-    var csv = "ruleId, priority, outputValue\r\n1,2,3";
+    var csv = "ruleId, priority, outputValue, filter1\r\n1,2,3,4\r\n1,2,3";
     await foreach (var rule in DataReader.ReadFromTextAsync<Rule3Filters<string, string, string>>(csv))
     {
         storage.Add(rule);
@@ -40,5 +41,6 @@ catch (Exception ex)
     Console.WriteLine(ex);
 }
 
-var rule1 = strategy.FindRule("1", "2", "3");
+var rule1 = strategy.FindRule("4", null, null);
 
+Console.WriteLine(rule1);
