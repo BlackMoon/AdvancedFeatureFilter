@@ -1,4 +1,5 @@
 ﻿using System;
+using Library.Extensions;
 
 namespace Library
 {
@@ -6,16 +7,20 @@ namespace Library
     {
         public static int Generate(params object[] args)
         {
-            if (args == null)
+            if (!args.AnySafe())
             {
                 return 0;
             }
 
-            const int seed = 17;
-
             unchecked
             {
-                return args.Aggregate(seed, (total, next) => total = total * 23 + next?.GetHashCode() ?? 0);
+                var hash = 17;
+                for (var i = 0; i < args.Length; i++)
+                {
+                    hash = hash * 23 + (i + args[i]?.GetHashCode() ?? 0);
+                }
+
+                return hash;
             }
         }
     }
