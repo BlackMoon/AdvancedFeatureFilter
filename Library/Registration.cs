@@ -49,11 +49,7 @@ namespace Library
 
                 default:
                     throw new NotImplementedException();
-                  
-
-
             }
-
 
             Type storageType = typeof(IStorage<>).MakeGenericType(ruleType);
             Type storageImplType = typeof(MemStorage<>).MakeGenericType(ruleType);
