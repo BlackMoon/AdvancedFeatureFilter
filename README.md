@@ -19,7 +19,7 @@ class StrategyRule
 }
 ```
 
-- Reuse different Rules models with another set of strongly typed filters.
+- Reuse different Rule models with another set of strongly typed filters.
 
 - Find best matching rule (respecting rule priority) and its
 OutputValue for the set of input values.
