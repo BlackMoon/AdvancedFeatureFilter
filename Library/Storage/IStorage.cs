@@ -8,9 +8,9 @@ namespace Library.Storage
 
         int AddRange(IEnumerable<T> items);
 
-        T? FindByHashCode(int hash);
+        T? FindByHashCode(int[] hashes, IComparer<T>? comparer = null);
 
-        Task<T?> FindByHashCodeAsync(int hash, CancellationToken cancellationToken);
+        Task<T?> FindByHashCodeAsync(int[] hashes, IComparer<T>? comparer = null, CancellationToken cancellationToken = default);
     }
 }
 

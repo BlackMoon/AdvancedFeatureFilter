@@ -51,22 +51,22 @@ namespace Library.Storage
             throw new NotImplementedException();
         }
 
-        public T? FindByHashCode(int hash)
+        public T? FindByHashCode(int[] hashes, IComparer<T>? comparer)
         {
             return SqlQueryRunner.Execute<T>(
-                    $"SELECT TOP 1 r.* FROM {tableName} r WHERE r.hash = @hash ORDER BY r.priority DESC",
+                    $"SELECT TOP 1 r.* FROM {tableName} r WHERE r.hash IN @hashes ORDER BY r.priority DESC",
                     connStr,
-                    new Dictionary<string, object> { { "hash", hash } })
+                    new Dictionary<string, object> { { "hashes", hashes } })
                 .FirstOrDefault();
         }
 
-        public async Task<T?> FindByHashCodeAsync(int hash, CancellationToken cancellationToken)
+        public async Task<T?> FindByHashCodeAsync(int[] hashes, IComparer<T>? comparer, CancellationToken cancellationToken)
         {
             return (
                 await SqlQueryRunner.ExecuteAsync<T>(
-                    $"SELECT TOP 1 r.* FROM {tableName} r WHERE r.hash = @hash ORDER BY r.priority DESC",
+                    $"SELECT TOP 1 r.* FROM {tableName} r WHERE r.hash IN @hashes ORDER BY r.priority DESC",
                     connStr,
-                    new Dictionary<string, object> { { "hash", hash } },
+                    new Dictionary<string, object> { { "hashes", hashes } },
                     cancellationToken)
                 )
                 .FirstOrDefault();

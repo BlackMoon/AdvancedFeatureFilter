@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Library.Rules
 {
@@ -12,10 +11,8 @@ namespace Library.Rules
 
         public int? OutputValue { get; set; }
 
-        public int CompareTo(BaseRule? other)
-        {
-            return other == null ? 1 : Priority.CompareTo(other.Priority);
-        }
+        // sort by Priority desc
+        public int CompareTo(BaseRule? other) => other == null ? 1 : other.Priority.CompareTo(Priority);
     }
 }
 

@@ -38,18 +38,52 @@ namespace Library.Storage
 
         public int AddRange(IEnumerable<T> items) => items.AnySafe() ? items.Sum(Add) : 0;
 
-        public T? FindByHashCode(int hash)
+        public T? FindByHashCode(int[] hashes, IComparer<T>? comparer)
         {
-            var objectFromCache = cache.Get(hash.ToString());
-            var sortedList = DeserializeObject(objectFromCache);
-            return sortedList.AnySafe() ? sortedList[0] : default;
+            var items = hashes
+                .Select(h =>
+                {
+                    var objectFromCache = cache.Get(h.ToString());
+                    var sortedList = DeserializeObject(objectFromCache);
+                    return sortedList.AnySafe() ? sortedList[0] : default;
+                })
+                .ToList();
+
+            if (comparer != null)
+            {
+                items.Sort(comparer!);
+            }
+            else
+            {
+                items.Sort();
+            }
+
+            return items.FirstOrDefault();
         }
 
-        public async Task<T?> FindByHashCodeAsync(int hash, CancellationToken cancellationToken)
+        public async Task<T?> FindByHashCodeAsync(int[] hashes, IComparer<T>? comparer, CancellationToken cancellationToken)
         {
-            var objectFromCache = await cache.GetAsync(hash.ToString(), cancellationToken);
-            var sortedList = DeserializeObject(objectFromCache);
-            return sortedList.AnySafe() ? sortedList[0] : default;
+            var tasks = hashes
+                .Select(async h =>
+                {
+                    var objectFromCache = await cache.GetAsync(h.ToString());
+                    var sortedList = DeserializeObject(objectFromCache);
+                    return sortedList.AnySafe() ? sortedList[0] : default;
+                })
+                .ToList();
+
+            var items = (await Task.WhenAll(tasks)).ToList();
+
+            if (comparer != null)
+            {
+                items.Sort(comparer!);
+            }
+            else
+            {
+                items.Sort();
+            }
+
+            return items.FirstOrDefault();
         }
 
         private static List<T>? DeserializeObject(byte[] buffer)

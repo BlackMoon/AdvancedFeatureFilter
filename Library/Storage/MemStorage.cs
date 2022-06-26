@@ -1,6 +1,9 @@
 ﻿using Library.Extensions;
 using Library.Storage;
 
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8604 // Possible null reference argument.
+
 namespace AdvancedFeatureFilter.Storage
 {
     public class MemStorage<T> : IStorage<T> where T : IComparable<T>
@@ -15,7 +18,7 @@ namespace AdvancedFeatureFilter.Storage
             }
 
             var hash = item.GetHashCode();
-
+            
             var sortedList = ctx.TryGetValue(hash, out var list) ? list : new List<T>();
             sortedList.AddSorted(item);
 
@@ -25,15 +28,17 @@ namespace AdvancedFeatureFilter.Storage
 
         public int AddRange(IEnumerable<T> items) => items.AnySafe() ? items.Sum(Add) : 0;
 
-        public T? FindByHashCode1(int[] hashes, IComparer<T> comparer)
+        public T? FindByHashCode(int[] hashes, IComparer<T>? comparer)
         {
             var items = hashes
-                .Select(h => ctx.TryGetValue(h, out var list) && list.Any() ? list[0] : default)
+                .Select(h => (ctx.TryGetValue(h, out var list), list))
+                .Where(t => t.Item1)
+                .Select(t => t.Item2[0])
                 .ToList();
 
             if (comparer != null)
             {
-                items.Sort(comparer!);
+                items.Sort(comparer);
             }
             else
             {
@@ -43,9 +48,8 @@ namespace AdvancedFeatureFilter.Storage
             return items.FirstOrDefault();
         }
 
-        public T? FindByHashCode(int hash) => ctx.TryGetValue(hash, out var list) && list.Any() ? list[0] : default;
-
-        public Task<T?> FindByHashCodeAsync(int hash, CancellationToken cancellationToken) => Task.Run(() => FindByHashCode(hash), cancellationToken);
+        public Task<T?> FindByHashCodeAsync(int[] hashes, IComparer<T>? comparer, CancellationToken cancellationToken) =>
+            Task.Run(() => FindByHashCode(hashes, comparer), cancellationToken);
     }
 }
 
