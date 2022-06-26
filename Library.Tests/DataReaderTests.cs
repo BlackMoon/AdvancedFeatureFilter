@@ -2,13 +2,10 @@
 using Library.Extensions;
 using Library.Rules;
 
-
 namespace Library.Tests
 {
     public class DataReaderTests
     {
-        private const string AnyValue = "<ANY>";
-
         [Fact]
         public async Task EmptyText()
         {
@@ -27,14 +24,32 @@ namespace Library.Tests
             await CheckOutput(
                 new [] { "RuleId", "Priority", "OutputValue", "Filter1" },
                 new[] {
-                    new[] { "1", "1", "1", AnyValue },
-                    new[] { "2", "2", "2", AnyValue },
-                    new[] { "3", "3", "3", AnyValue }
+                    new[] { "1", "1", "1", Replacer.AnyString },
+                    new[] { "2", "2", "2", Replacer.AnyString },
+                    new[] { "3", "3", "3", Replacer.AnyString }
                 },
                 new[] {
-                    new Rule1Filters<string> { RuleId = 1, Priority = 1, OutputValue = 1, Filter1 = AnyValue },
-                    new Rule1Filters<string> { RuleId = 2, Priority = 2, OutputValue = 2, Filter1 = AnyValue },
-                    new Rule1Filters<string> { RuleId = 3, Priority = 3, OutputValue = 3, Filter1 = AnyValue }
+                    new Rule1Filters<string> { RuleId = 1, Priority = 1, OutputValue = 1, Filter1 = Replacer.AnyString },
+                    new Rule1Filters<string> { RuleId = 2, Priority = 2, OutputValue = 2, Filter1 = Replacer.AnyString },
+                    new Rule1Filters<string> { RuleId = 3, Priority = 3, OutputValue = 3, Filter1 = Replacer.AnyString }
+                    }
+                );
+        }
+
+        [Fact]
+        public async Task HeaderAndRows_Replacement()
+        {
+            await CheckOutput(
+                new[] { "RuleId", "Priority", "OutputValue", "Filter1" },
+                new[] {
+                    new[] { "1", "1", "1", "10" },
+                    new[] { "2", "2", "2", Replacer.AnyString },
+                    new[] { "3", "3", "3", Replacer.AnyString }
+                },
+                new[] {
+                    new Rule1Filters<int> { RuleId = 1, Priority = 1, OutputValue = 1, Filter1 = 10 },
+                    new Rule1Filters<int> { RuleId = 2, Priority = 2, OutputValue = 2, Filter1 = Replacer.AnyInt },
+                    new Rule1Filters<int> { RuleId = 3, Priority = 3, OutputValue = 3, Filter1 = Replacer.AnyInt }
                     }
                 );
         }
@@ -45,12 +60,12 @@ namespace Library.Tests
             await CheckOutput(
                 new[] { "RuleId", "Priority", "OutputValue", "Filter1" },
                 new[] {
-                    new[] { "1", "1", "1", AnyValue },
+                    new[] { "1", "1", "1", Replacer.AnyString },
                     new[] { "2", "2", "2" },
                     new[] { "3", "3" }
                 },
                 new[] {
-                    new Rule1Filters<string> { RuleId = 1, Priority = 1, OutputValue = 1, Filter1 = AnyValue },
+                    new Rule1Filters<string> { RuleId = 1, Priority = 1, OutputValue = 1, Filter1 = Replacer.AnyString },
                     new Rule1Filters<string> { RuleId = 2, Priority = 2, OutputValue = 2 },
                     new Rule1Filters<string> { RuleId = 3, Priority = 3 }
                     }
@@ -62,10 +77,10 @@ namespace Library.Tests
         {
             var ex = await Assert.ThrowsAsync<InvalidCastException>(() => CheckOutput(new[] { "RuleId", "Priority", "OutputValue", "Filter1" },
                 new[] {
-                    new[] { "1", "1", AnyValue },
+                    new[] { "1", "1", Replacer.AnyString },
                 },
                 new[] {
-                    new Rule1Filters<string> { RuleId = 1, Priority = 1, OutputValue = 1, Filter1 = AnyValue },
+                    new Rule1Filters<string> { RuleId = 1, Priority = 1, OutputValue = 1, Filter1 = Replacer.AnyString },
                     }
                 )
             );

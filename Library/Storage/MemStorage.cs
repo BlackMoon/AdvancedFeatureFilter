@@ -2,7 +2,6 @@
 using Library.Storage;
 
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
-#pragma warning disable CS8604 // Possible null reference argument.
 
 namespace AdvancedFeatureFilter.Storage
 {
