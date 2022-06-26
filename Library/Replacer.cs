@@ -4,11 +4,10 @@ namespace Library
 {
     public static class Replacer
     {
+        public const int AnyInt = -99;
+        public const bool AnyBool = false;
         public const string AnyString = "<ANY>";
-
-        private const int AnyInt = -99;
-        private const bool AnyBool = false;
-        private static DateTime AnyDate = new DateTime(1, 1, 1);
+        public static DateTime AnyDate = new DateTime(1, 1, 1);
 
         private static readonly IDictionary<Type, object> AnyTypes = new Dictionary<Type, object>() {
             { typeof(int), AnyInt },
