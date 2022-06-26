@@ -19,6 +19,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Moq" Version="4.18.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,8 +27,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Storage\" />
+    <None Remove="Moq" />
+    <None Remove="Microsoft.Extensions.Caching.Memory" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Storage\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\sample_rules.csv">
+      <Link>sample_rules.csv</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

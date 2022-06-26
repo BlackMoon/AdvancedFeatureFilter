@@ -10,7 +10,6 @@ namespace Library.Tests.Storage
         private Mock<IDistributedCache> cacheMock;
         private IStorage<Rule1Filters<int>> storage;
 
-
         public CacheStorageTests()
         {
             cacheMock = new Mock<IDistributedCache>();

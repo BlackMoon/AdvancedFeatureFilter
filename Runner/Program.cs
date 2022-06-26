@@ -27,8 +27,7 @@ try
 {
     await strategy.LoadRules(appConfig.Value.CsvFile!);
 
-    Console.WriteLine();
-    var rule = strategy.FindRule("AAA", "BBB", "CCC", "<ANY>");
+    var rule = strategy.FindRule("BBB", "CCC", "CCC", "CCC");
     Console.WriteLine(rule);
 }
 catch (Exception ex)

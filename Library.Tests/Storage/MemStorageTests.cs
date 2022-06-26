@@ -1,5 +1,4 @@
-﻿using AdvancedFeatureFilter.Storage;
-using Library.Rules;
+﻿using Library.Rules;
 using Library.Storage;
 
 namespace Library.Tests.Storage

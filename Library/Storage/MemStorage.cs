@@ -1,9 +1,8 @@
 ﻿using Library.Extensions;
-using Library.Storage;
 
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
 
-namespace AdvancedFeatureFilter.Storage
+namespace Library.Storage
 {
     public class MemStorage<T> : IStorage<T> where T : IComparable<T>
     {
