@@ -14,7 +14,7 @@ namespace Library.Tests.Storage
         }
 
         [Fact]
-        public void AddsItem()
+        public void Add()
         {
             var rule = new Rule1Filters<int>();
             var total = storage.Add(rule);
@@ -22,9 +22,13 @@ namespace Library.Tests.Storage
         }
 
         [Fact]
-        public void AddsRange()
+        public void AddRange()
         {
-            var rules = new[] { new Rule1Filters<int>(), new Rule1Filters<int>() };
+            var rules = new[] {
+                new Rule1Filters<int>() { Filter1 = 1 },
+                new Rule1Filters<int>() { Filter1 = 2 }
+            };
+
             var total = storage.AddRange(rules);
             Assert.Equal(rules.Length, total);
         }
@@ -32,7 +36,7 @@ namespace Library.Tests.Storage
         [Fact]
         public void FindByHashCode()
         {
-            var hashes = new[] { 1000 };
+            var hashes = new[] { 1000, 2000 };
             var ex = Record.Exception(() => storage.FindByHashCode(hashes));
             Assert.Null(ex);
         }
@@ -40,7 +44,7 @@ namespace Library.Tests.Storage
         [Fact]
         public async Task FindByHashCodeAsync()
         {
-            var hashes = new[] { 1000 };
+            var hashes = new[] { 1000, 2000 };
             var ex = await Record.ExceptionAsync(() => storage.FindByHashCodeAsync(hashes));
             Assert.Null(ex);
         }

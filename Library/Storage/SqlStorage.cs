@@ -10,7 +10,6 @@ namespace Library.Storage
     {
         private readonly string connStr;
         private readonly string tableName;
-        
 
         public SqlStorage(IConfiguration configuration)
         {
