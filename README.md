@@ -51,11 +51,10 @@ This will install all the dependencies and build the solution.
 
 - `Rules` - a set of generic templates that can accept from 1 to 4 different filter types;
 - `IStorage` - an interface for storing rules. There are several implementation of IStorage: MemStorage, CacheStorage, SqlStorage.
-- `EngineStrategy` - an array of classes for processing rules. Provides LoadRules & FindRule methods.
-Can handle various types of filters.
+- `EngineStrategy` - an array of classes for processing rules. Provides LoadRules & FindRule methods. Can handle various types of filters.
 - Various helper static classes (`DataReader`, `Generator`, `Replacer`, etc)
 
-#### Registration
+#### Registration & usage
 
 Register strategy with predefine types of filter values. 
 The maximum supported number of types is 4.
@@ -68,6 +67,17 @@ using IHost host = Host.CreateDefaultBuilder(args)
         services.AddStrategy(typeof(TFilter1), typeof(TFilter2), typeof(TFilter3), typeof(TFilter4));
     })
     .Build();
+
+var strategy = services.GetRequiredService<IStrategy4<string, string, string, int>>();
+try
+{
+    await strategy.LoadRules(csvFile);
+    var rule = strategy.FindRule("BBB", "CCC", "CCC", 10);
+}
+catch (Exception ex)
+{
+    Console.WriteLine(ex);
+}
 ```
 
 ### Benchmarks
