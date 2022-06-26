@@ -17,7 +17,7 @@ namespace Library.Strategy
 
         public Rule2Filters<TFilter1, TFilter2>? FindRule(TFilter1 val1, TFilter2 val2)
         {
-            var hash = HashGenerator.Generate(val1, val2);
+            var hash = Generator.GenerateHash(val1, val2);
             return storage.FindByHashCode(hash);
         }
     }

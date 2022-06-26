@@ -6,18 +6,18 @@ using Library.Storage;
 
 namespace Library.Strategy
 {
-    public class EngineStrategy4<TFilter1, TFilter2, TFilter3, TFilter4> : IStrategy4<TFilter1, TFilter2, TFilter3, TFilter4>
+    public class EngineStrategy3<TFilter1, TFilter2, TFilter3> : IStrategy3<TFilter1, TFilter2, TFilter3>
     {
-        private readonly IStorage<Rule4Filters<TFilter1, TFilter2, TFilter3, TFilter4>> storage;
+        private readonly IStorage<Rule3Filters<TFilter1, TFilter2, TFilter3>> storage;
 
-        public EngineStrategy4(IStorage<Rule4Filters<TFilter1, TFilter2, TFilter3, TFilter4>> storage)
+        public EngineStrategy3(IStorage<Rule3Filters<TFilter1, TFilter2, TFilter3>> storage)
         {
             this.storage = storage;
         }
 
-        public Rule4Filters<TFilter1, TFilter2, TFilter3, TFilter4>? FindRule(TFilter1 val1, TFilter2 val2, TFilter3 val3, TFilter4 val4)
+        public Rule3Filters<TFilter1, TFilter2, TFilter3>? FindRule(TFilter1 val1, TFilter2 val2, TFilter3 val3)
         {
-            var hash = HashGenerator.Generate(val1, val2, val3, val4);
+            var hash = Generator.GenerateHash(val1, val2, val3);
             return storage.FindByHashCode(hash);
         }
     }

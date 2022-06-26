@@ -41,6 +41,12 @@ catch (Exception ex)
     Console.WriteLine(ex);
 }
 
-var rule1 = strategy.FindRule("4", null, null);
+//var rule1 = strategy.FindRule("4", null, null);
 
-Console.WriteLine(rule1);
+//Console.WriteLine(rule1);
+
+
+object a = DateTime.Now;
+var b = Replacer.ReplaceWithAny(a);
+
+Console.WriteLine(b);

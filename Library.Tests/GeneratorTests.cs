@@ -10,21 +10,21 @@ public class GeneratorTests
     [InlineData(4771173, 1, 2, 3, 4)]
     public void GenerateHashForInt(int expected, params object[] args)
     {
-        var result = HashGenerator.Generate(args);
+        var result = Generator.GenerateHash(args);
         Assert.Equal(expected, result);
     }
 
     [Fact]
     public void GenerateHashForDate()
     {
-        var result = HashGenerator.Generate(DateTime.Now);
+        var result = Generator.GenerateHash(DateTime.Now);
         Assert.NotEqual(0, result);
     }
 
     [Fact]
     public void GenerateHashForString()
     {
-        var result = HashGenerator.Generate("string");
+        var result = Generator.GenerateHash("string");
         Assert.NotEqual(0, result);
     }
 }

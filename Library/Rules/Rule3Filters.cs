@@ -9,7 +9,7 @@ namespace Library.Rules
     {
         public TFilter3 Filter3 { get; set; }
 
-        public override int GetHashCode() => HashGenerator.Generate(Filter1, Filter2, Filter3);
+        public override int GetHashCode() => Generator.GenerateHash(Filter1, Filter2, Filter3);
     }
 }
 

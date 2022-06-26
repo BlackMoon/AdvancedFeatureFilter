@@ -197,9 +197,10 @@ namespace Library
 
                     try
                     {
-                        var propType = prop.PropertyType;
                         var val = data[colIx];
-                        prop.SetValue(obj, ChangeType(val, propType));
+                        var propType = prop.PropertyType;
+                        var propValue = val != Replacer.AnyString ? ChangeType(val, propType) : Replacer.ReplaceWithAny(propType);
+                        prop.SetValue(obj, propValue);
                     }
                     catch (Exception ex)
                     {

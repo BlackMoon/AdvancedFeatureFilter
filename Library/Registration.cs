@@ -1,5 +1,4 @@
-﻿using System;
-using AdvancedFeatureFilter.Storage;
+﻿using AdvancedFeatureFilter.Storage;
 using Library.Extensions;
 using Library.Rules;
 using Library.Storage;
@@ -10,11 +9,25 @@ namespace Library
 {
     public static class Registration
     {
+        /// <summary>
+        /// Adds a strategy with specific filter-types
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="typeArgs"></param>
+        /// <returns></returns>
         public static IServiceCollection AddStrategy(this IServiceCollection services, params Type[] typeArgs)
         {
             return AddStrategyWithStorage(services, typeof(MemStorage<>), typeArgs);
         }
 
+        /// <summary>
+        /// Adds a strategy with specific storage-type & filter-types
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="storageImplType"></param>
+        /// <param name="typeArgs"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
         public static IServiceCollection AddStrategyWithStorage(this IServiceCollection services, Type storageImplType, params Type[] typeArgs)
         {
             if (!typeArgs.AnySafe())

@@ -9,6 +9,6 @@ namespace Library.Rules
     {
         public TFilter4 Filter4 { get; set; }
 
-        public override int GetHashCode() => HashGenerator.Generate(Filter1, Filter2, Filter3, Filter4);
+        public override int GetHashCode() => Generator.GenerateHash(Filter1, Filter2, Filter3, Filter4);
     }
 }
