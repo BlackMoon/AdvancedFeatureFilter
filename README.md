@@ -50,13 +50,13 @@ This will install all the dependencies and build the solution.
 ### Artifacts
 
 - `Rules` - a set of generic templates that can accept from 1 to 4 different filter types;
-- `IStorage` - an interface for storing rules. There are several implementation of IStorage: MemStorage, CacheStorage, SqlStorage.
+- `IStorage` - an interface for storing rules. There are several implementation of IStorage: `MemStorage`, `CacheStorage`, `SqlStorage`.
 - `EngineStrategy` - an array of classes for processing rules. Provides LoadRules & FindRule methods. Can handle various types of filters.
 - Various helper static classes (`DataReader`, `Generator`, `Replacer`, etc)
 
 #### Registration & usage
 
-Register strategy with predefine types of filter values. 
+Register strategy with predefine types of filters (TFilter1, TFilter2, etc). 
 The maximum supported number of types is 4.
 
 ```cs
@@ -82,7 +82,8 @@ catch (Exception ex)
 
 ### Benchmarks
 
-Benchmarking are available by default in Library.Benchmark
+Benchmarking are available by default in Library.Benchmark.
+
 To start benchmarks 
 
 ```shell
