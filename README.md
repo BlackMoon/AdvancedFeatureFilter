@@ -56,7 +56,7 @@ This will install all the dependencies and build the solution.
 
 #### Registration & usage
 
-Register strategy with predefine types of filters (TFilter1, TFilter2, etc). 
+Register strategy with predefined types of filters (TFilter1, TFilter2, etc). 
 The maximum supported number of types is 4.
 
 ```cs

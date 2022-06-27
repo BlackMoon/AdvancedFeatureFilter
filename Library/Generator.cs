@@ -58,7 +58,12 @@ namespace Library
                 var hash = 17;
                 for (var i = 0; i < args.Length; i++)
                 {
-                    hash = hash * 23 + (i + args[i]?.GetHashCode() ?? 0);
+                    var argHash = i;
+                    if (args[i] != null)
+                    {
+                        argHash += args[i] is string ? ((string)args[i]).GetDeterministicHashCode() : args[i].GetHashCode();
+                    }
+                    hash = hash * 23 + argHash;
                 }
 
                 return hash;
