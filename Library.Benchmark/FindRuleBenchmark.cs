@@ -3,6 +3,8 @@ using Library.Rules;
 using Library.Storage;
 using Library.Strategy;
 
+#pragma warning disable CS8604 // Possible null reference argument.
+
 namespace Library.Benchmark
 {
     public class FindRuleBenchmark
@@ -24,12 +26,24 @@ namespace Library.Benchmark
             }
         }
 
+        [Params("AAA", "AAA")]
+        public string? Val1 { get; set; }
+
+        [Params("BBB", "BBB")]
+        public string? Val2 { get; set; }
+
+        [Params("CCC", "CCC")]
+        public string? Val3 { get; set; }
+
+        [Params("AAA", "DDD")]
+        public string? Val4 { get; set; }
+
         [Benchmark]
         public void FindRule()
         {
             try
             {
-                strategy.FindRule("BBB", "CCC", "CCC", "CCC");
+                var rule = strategy.FindRule(Val1, Val2, Val3, Val4);
             }
             catch (Exception ex)
             {
