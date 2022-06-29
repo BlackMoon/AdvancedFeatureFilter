@@ -11,7 +11,7 @@ namespace Library.Strategy
 
         public EngineStrategy4(IStorage<Rule4Filters<TFilter1, TFilter2, TFilter3, TFilter4>> storage)
         {
-            Combinations = Generator.AllCombinations(4);
+            Combinations = Generator.AllCombinations(4).ToArray();
             this.storage = storage;
         }
 
