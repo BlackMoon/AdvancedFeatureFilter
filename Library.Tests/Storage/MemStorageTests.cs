@@ -1,4 +1,5 @@
-﻿using Library.Rules;
+﻿using System.ComponentModel;
+using Library.Rules;
 using Library.Storage;
 
 namespace Library.Tests.Storage
@@ -33,19 +34,36 @@ namespace Library.Tests.Storage
         }
 
         [Fact]
+        [Description("If 2 or more rules have the same hashcode, return the rule with the highest priority")]
         public void FindByHashCode()
         {
-            var hashes = new[] { 1000, 2000 };
-            var ex = Record.Exception(() => storage.FindByHashCode(hashes));
-            Assert.Null(ex);
+            var rules = new[] {
+                new Rule1Filters<int>() { Filter1 = 1, Priority = 5 },
+                new Rule1Filters<int>() { Filter1 = 2, Priority = 10 }
+            };
+
+            storage.AddRange(rules);
+
+            var hashes = rules.Select(r => r.GetHashCode()).ToArray();
+            var result = storage.FindByHashCode(hashes);
+            
+            Assert.Equal(result, rules[1]);
         }
 
         [Fact]
         public async Task FindByHashCodeAsync()
         {
-            var hashes = new[] { 1000, 2000 };
-            var ex = await Record.ExceptionAsync(() => storage.FindByHashCodeAsync(hashes));
-            Assert.Null(ex);
+            var rules = new[] {
+                new Rule1Filters<int>() { Filter1 = 1, Priority = 5 },
+                new Rule1Filters<int>() { Filter1 = 2, Priority = 10 }
+            };
+
+            storage.AddRange(rules);
+
+            var hashes = rules.Select(r => r.GetHashCode()).ToArray();
+            var result = await storage.FindByHashCodeAsync(hashes);
+
+            Assert.Equal(result, rules[1]);
         }
     }
 }
