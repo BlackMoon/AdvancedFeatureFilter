@@ -134,8 +134,9 @@ namespace Library
             {
                 var pos = 0;
 
-                foreach (var str in line.Split(separator, StringSplitOptions.TrimEntries)) {
-                    var colName = str.ToString().Trim().ToLowerInvariant();
+                foreach (var str in SplitLine(line, separator))
+                {
+                    var colName = str.Trim().ToLowerInvariant();
                     headers[colName] = pos++;
                 }
 
@@ -154,6 +155,18 @@ namespace Library
             {
                 options.Separator = AutoDetectSeparator(line);
             }
+        }
+
+        private static IReadOnlyList<string> SplitLine(ReadOnlySpan<char> line, char separator)
+        {
+            var values = new List<string>();
+            
+            foreach (var str in line.Split(separator, StringSplitOptions.TrimEntries))
+            {
+                values.Add(str.ToString());
+            }
+
+            return values.AsReadOnly();
         }
 
         private static async IAsyncEnumerable<T> ReadImplAsync<T>(
@@ -186,11 +199,12 @@ namespace Library
 
                 T obj = new();
 
-                var data = line.Split(options.Separator);
+                var data = SplitLine(line.AsSpan(), options.Separator);
+
                 for (var j = 0; j < props.Length; j++)
                 {
                     var prop = props[j];
-                    if (!headerLookup.TryGetValue(prop.Name.ToLowerInvariant(), out var colIx) || colIx > data.Length -1)
+                    if (!headerLookup.TryGetValue(prop.Name.ToLowerInvariant(), out var colIx) || colIx > data.Count -1)
                     {
                         continue;
                     }

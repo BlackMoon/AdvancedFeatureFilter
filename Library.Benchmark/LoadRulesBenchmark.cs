@@ -6,6 +6,7 @@ using Library.Strategy;
 
 namespace Library.Benchmark
 {
+    [MemoryDiagnoser]
     public class LoadRulesBenchmark
     {
         private readonly IStorage<Rule4Filters<string, string, string, string>> storage;

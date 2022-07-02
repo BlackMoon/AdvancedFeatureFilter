@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Library.Storage
+﻿namespace Library.Storage
 {
     public interface IStorage<T> 
     {

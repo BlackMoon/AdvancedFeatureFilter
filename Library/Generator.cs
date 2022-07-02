@@ -34,7 +34,7 @@ namespace Library
                     stack.Push(value);
                     if (index == k)
                     {
-                        yield return result;
+                        yield return (int[])result.Clone();
                         break;
                     }
                 }
