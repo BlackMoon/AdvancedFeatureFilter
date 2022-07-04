@@ -1,5 +1,4 @@
-﻿using System;
-namespace Library.Extensions
+﻿namespace Library.Extensions
 {
     public static class SpanExtensions
     {
@@ -11,7 +10,7 @@ namespace Library.Extensions
                 throw new ArgumentException($"Invalid value for {nameof(options)}: {options}");
             }
 
-            return new SpanSplitEnumerator<T>(span, separator, options == StringSplitOptions.RemoveEmptyEntries);
+            return new SpanSplitEnumerator<T>(span, separator, options.HasFlag(StringSplitOptions.RemoveEmptyEntries));
         }
 
         public ref struct SpanSplitEnumerator<T> where T : IEquatable<T>
