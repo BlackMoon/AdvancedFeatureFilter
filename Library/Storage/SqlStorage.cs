@@ -1,6 +1,6 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Text;
 using Dapper.Contrib.Extensions;
+using Library.Extensions;
 using Library.Rules;
 using Microsoft.Extensions.Configuration;
 
@@ -24,22 +24,10 @@ namespace Library.Storage
                 return 0;
             }
 
-            var props = typeof(T).GetProperties();
-
-            var fields = new List<string>(props.Length);
-            Dictionary<string, object?> parameters = new Dictionary<string, object?>(props.Length);
-            foreach(var prop in props)
-            {
-                var field = prop.Name;
-                fields.Add(field);
-                parameters[field] = prop.GetValue(item);
-            }
-
-            var columns = string.Join(", ", fields);
-            var values = string.Join(", ", fields.Select(f => $"@{f}"));
+            var (fields, values, parameters) = SqlStorage<T>.GenerateParams(new[] { item });
 
             return SqlQueryRunner.ExecuteScalar<int>(
-                    $"INSERT INTO {tableName} ({columns}) VALUES ({values})",
+                    $"INSERT INTO {tableName} ({string.Join(", ", fields)}) VALUES ({string.Join(", ", values)})",
                     connStr,
                     parameters!
                 );
@@ -47,7 +35,18 @@ namespace Library.Storage
 
         public int AddRange(IEnumerable<T> items)
         {
-            throw new NotImplementedException();
+            if  (!items.AnySafe())
+            {
+                return 0;
+            }
+
+            var (fields, values, parameters) = SqlStorage<T>.GenerateParams(items);
+
+            return SqlQueryRunner.ExecuteScalar<int>(
+                    $"INSERT INTO {tableName} ({string.Join(", ", fields)}) VALUES ({string.Join(", ", values)})",
+                    connStr,
+                    parameters!
+                );
         }
 
         public T? FindByHashCode(int[] hashes, IComparer<T>? comparer)
@@ -69,6 +68,34 @@ namespace Library.Storage
                     cancellationToken)
                 )
                 .FirstOrDefault();
+        }
+
+        private static (string[], string[], Dictionary<string, object?>) GenerateParams(IEnumerable<T> items)
+        {
+            var index = 0;
+            var itemsLen = items.Count();
+            var props = typeof(T).GetProperties();
+
+            var fields = props.Select(p => p.Name).ToArray();
+            var values = new string[itemsLen];
+            Dictionary<string, object?> parameters = new(itemsLen * props.Length);
+
+            foreach (var item in items)
+            {
+                var sb = new StringBuilder("(");
+                
+                foreach (var prop in props)
+                {
+                    var field = $"{prop.Name}{index}";
+                    parameters[field] = prop.GetValue(item);
+                    sb.Append($"{field}");
+                }
+
+                sb.AppendLine(")");
+                values[index++] = sb.ToString();
+            }
+
+            return (fields, values, parameters);
         }
     }
 }
